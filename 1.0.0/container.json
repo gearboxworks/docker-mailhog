@@ -1,0 +1,15 @@
+{
+	"organization": "gearboxworks",
+	"name": "mailhog",
+	"version": "1.0.0",
+	"majorversion": "1.0",
+	"latest": "1",
+	"class": "system",
+	"network": "--network gearboxnet",
+	"ports": "-p 280:8025 -p 225:1025",
+	"volumes": "",
+	"restart": "--restart always",
+	"args": "",
+	"env": "MAILHOG_VERSION"
+}
+
