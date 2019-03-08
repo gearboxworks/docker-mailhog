@@ -1,7 +1,7 @@
 # This image doesn't use Alpine as the base, so we are going to reference the gearbox-base container indirectly.
 
 # 1. First reference the gearbox-base image.
-FROM gearboxworks/gearbox-base:3.4 as gearbox-base
+FROM gearboxworks/gearbox-base:alpine-3.4 as gearbox-base
 
 # 2. Now copy the local files specific to this container.
 COPY build /build
