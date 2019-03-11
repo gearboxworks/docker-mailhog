@@ -4,25 +4,25 @@
 
 
 # Determine whether we use "nodeJS" or "JQ".
-JSONCMD := $(shell jq -r '.organization' ./container.json)
+JSONCMD := $(shell jq -r '.organization' ./gearbox.json)
 ifneq ($(JSONCMD),)
 define GetFromPkg
-$(shell jq -r ".$(1)" ./container.json)
+$(shell jq -r ".$(1)" ./gearbox.json)
 endef
 
 define rawJSON
-$(shell jq -Mc -r '' ./container.json)
+$(shell jq -Mc -r '' ./gearbox.json)
 endef
 
 else
-JSONCMD := $(shell node -p "require('./container.json').organization")
+JSONCMD := $(shell node -p "require('./gearbox.json').organization")
 ifneq ($(JSONCMD),)
 define GetFromPkg
-$(shell node -p "require('./container.json').$(1)")
+$(shell node -p "require('./gearbox.json').$(1)")
 endef
 
 define rawJSON
-$(shell node -p "require('./container.json')")
+$(shell node -p "require('./gearbox.json')")
 endef
 
 else
@@ -43,6 +43,7 @@ PORTS		:= $(call GetFromPkg,ports)
 VOLUMES		:= $(call GetFromPkg,volumes)
 RESTART		:= $(call GetFromPkg,restart)
 ARGS		:= $(call GetFromPkg,args)
+STATE		:= $(call GetFromPkg,state)
 ENV		:= $(call GetFromPkg,env)
 
 OLDNAME		:= $(NAME)
@@ -57,7 +58,8 @@ CONTAINER_NAME	?= $(NAME)-$(VERSION)
 CONTAINER_JSON	?= '$(call rawJSON)'
 
 
-LOGFILE := $(NAME)-$(shell date +'%Y%m%d-%H%M%S').log
+# LOGFILE := $(NAME)-$(shell date +'%Y%m%d-%H%M%S').log
+LOGFILE := $(NAME).log
 
 
 .PHONY: build push release clean list inspect test create shell run start stop rm
@@ -67,14 +69,21 @@ LOGFILE := $(NAME)-$(shell date +'%Y%m%d-%H%M%S').log
 default: all
 
 all:
-	@echo "info		- Generate info from runtime container image."
 	@echo "clean		- Clean runtime container image."
 	@echo "build		- Generate runtime container image."
-	@echo "push		- Push runtime container image to DockerHub."
+	@echo "test		- Execute container unit tests."
+	@echo "push		- Push runtime container image to DockerHub & GitHub."
+	@echo ""
+	@echo "release		- Do all of the above."
+	@echo ""
+	@echo "info		- Generate info from runtime container image."
+	@echo "log		- Show log from last build."
+	@echo "readme		- Show README.md."
 	@echo ""
 	@echo "Process:"
 	@echo "	make clean"
 	@echo "	make build"
+	@echo "	make test"
 
 
 ################################################################################
@@ -101,19 +110,27 @@ readme:
 
 ################################################################################
 build: $(DOCKERFILE)
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
-	script -r -t 10 logs/$(LOGFILE) docker build -t $(IMAGE_NAME):$(VERSION) --label container.json='$(call rawJSON)' --label container.organization="$(ORGANIZATION)" --label container.name="$(NAME)" --label container.version="$(VERSION)" --label container.majorversion="$(MAJORVERSION)" --label container.latest="$(LATEST)" --label container.class="$(CLASS)" --label container.network="$(NETWORK)" --label container.ports="$(PORTS)" --label container.volumes="$(VOLUMES)" --label container.restart="$(RESTART)" --label container.args="$(ARGS)" --label container.env="$(ENV)" --build-arg $(ENV)="$(VERSION)" $(BUILD_ARGS) -f $(DOCKERFILE) .
+	script -r -t 10 logs/$(LOGFILE) docker build -t $(IMAGE_NAME):$(VERSION) --label gearbox.json='$(call rawJSON)' --label container.organization="$(ORGANIZATION)" --label container.name="$(NAME)" --label container.version="$(VERSION)" --label container.majorversion="$(MAJORVERSION)" --label container.latest="$(LATEST)" --label container.class="$(CLASS)" --label container.network="$(NETWORK)" --label container.ports="$(PORTS)" --label container.volumes="$(VOLUMES)" --label container.restart="$(RESTART)" --label container.args="$(ARGS)" --label container.env="$(ENV)" --build-arg $(ENV)="$(VERSION)" $(BUILD_ARGS) -f $(DOCKERFILE) .
 ifneq ($(MAJORVERSION),)
 	docker tag $(IMAGE_NAME):$(VERSION) $(IMAGE_NAME):$(MAJORVERSION)
-endif
 	@echo "Gearbox: Log file saved to \"logs/$(LOGFILE)\""
+endif
 endif
 
 
 ################################################################################
 push:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
@@ -126,6 +143,10 @@ endif
 
 ################################################################################
 release: build
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
@@ -139,6 +160,10 @@ endif
 
 ################################################################################
 clean:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
@@ -152,6 +177,10 @@ endif
 
 ################################################################################
 list:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
@@ -163,7 +192,24 @@ endif
 
 
 ################################################################################
+log:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
+ifeq ($(ORGANIZATION),)
+	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
+else
+	@script -dp logs/$(LOGFILE) | less -SinR
+endif
+
+
+################################################################################
 inspect:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
@@ -173,11 +219,16 @@ endif
 
 ################################################################################
 test:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
-	make -k stop; make -k rm
-	make -k clean; make -k build; make -k create; make -k start
+	@echo "Unit tests not defined for this container."
+	# make -k stop; make -k rm
+	# make -k clean; make -k build; make -k create; make -k start
 endif
 
 
@@ -185,6 +236,10 @@ endif
 # Container related commands.
 
 create:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
@@ -194,6 +249,10 @@ endif
 
 ################################################################################
 shell:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
@@ -203,6 +262,10 @@ endif
 
 ################################################################################
 run:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
@@ -212,6 +275,10 @@ endif
 
 ################################################################################
 start:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
@@ -221,6 +288,10 @@ endif
 
 ################################################################################
 stop:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else
@@ -230,6 +301,10 @@ endif
 
 ################################################################################
 rm:
+ifeq ($(STATE),not_supported)
+	@echo "Gearbox: Not supported yet."
+	@exit 1
+endif
 ifeq ($(ORGANIZATION),)
 	@echo "Gearbox: ERROR - You need to install JQ or NodeJS."
 else

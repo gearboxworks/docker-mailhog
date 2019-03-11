@@ -1,4 +1,5 @@
 {
+	"state": "production",
 	"organization": "gearboxworks",
 	"name": "mailhog",
 	"version": "1.0.0",
