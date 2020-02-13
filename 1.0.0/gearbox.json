@@ -7,7 +7,7 @@
 	"latest": "1",
 	"class": "system",
 	"network": "--network gearboxnet",
-	"ports": "-p 280:8025 -p 225:1025",
+	"ports": "-P",
 	"volumes": "",
 	"restart": "--restart always",
 	"args": "",
