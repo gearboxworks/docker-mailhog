@@ -1,8 +1,0 @@
-#!/bin/bash
-
-export MH_HOSTNAME="mailhog.gearboxworks.io"
-export MH_API_BIND_ADDR="0.0.0.0:80"
-export MH_UI_BIND_ADDR="0.0.0.0:80"
-export MH_SMTP_BIND_ADDR="0.0.0.0:25"
-
-exec /usr/local/bin/MailHog
