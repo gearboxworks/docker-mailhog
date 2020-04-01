@@ -1,0 +1,32 @@
+{
+	"state": "production",
+	"organization": "gearboxworks",
+	"name": "mailhog",
+	"maintainer": "Gearbox Team <team@gearbox.works>",
+	"class": "system",
+	"network": "--network gearboxnet",
+	"ports": [
+		"80",
+		"25"
+	],
+	"volumes": "",
+	"restart": "--restart always",
+	"run": "/usr/local/bin/MailHog",
+	"args": "",
+	"env": {
+		"MH_HOSTNAME": "mailhog.gearboxworks.io",
+		"MH_API_BIND_ADDR": "0.0.0.0:80",
+		"MH_UI_BIND_ADDR": "0.0.0.0:80",
+		"MH_SMTP_BIND_ADDR": "0.0.0.0:25"
+	},
+	"refurl": "https://github.com/mailhog/MailHog",
+	"versions": {
+		"1.0.0": {
+			"majorversion": "1.0",
+			"latest": true,
+			"ref": "",
+			"base": "gearboxworks/gearbox-base:alpine-3.10"
+		}
+	}
+}
+
