@@ -1,7 +1,7 @@
 
 ################################################################################
 # WARNING: This file has been auto-generated. DO NOT EDIT: WARNING
-# Created on 2020-04-03T18:46:05+1100, using template:DockerfileRuntime.tmpl and json:gearbox.json
+# Created on 2020-05-06T19:09:04+1000, using template:DockerfileRuntime.tmpl and json:gearbox.json
 # Plain Docker container for docker-mailhog based off gearboxworks/gearbox-base:alpine-3.10
 
 ARG VERSION=1.0.0
@@ -18,7 +18,7 @@ ENV GEARBOX_CONTAINER_NAME "docker-mailhog"
 ENV GEARBOX_CONTAINER_VERSION ${VERSION}
 ENV GEARBOX_ENTRYPOINT ${GEARBOX_ENTRYPOINT}
 ENV GEARBOX_ENTRYPOINT_ARGS ${GEARBOX_ENTRYPOINT_ARGS}
-LABEL gearbox.json='{"schema": "gear-1","meta": {"state": "production","organization": "gearboxworks","name": "mailhog","label": "Mailhog","maintainer": "Gearbox Team <team@gearbox.works>","class": "system","refurl": "https://github.com/mailhog/MailHog"},"build": {"ports": {"http": "80","smtp": "25"},"run": "/usr/local/bin/MailHog","args": "","env": {"MH_API_BIND_ADDR": "0.0.0.0:80","MH_HOSTNAME": "mailhog.gearboxworks.io","MH_SMTP_BIND_ADDR": "0.0.0.0:25","MH_UI_BIND_ADDR": "0.0.0.0:80"},"network": "--network gearboxnet","volumes": "","restart": "--restart always"},"run": {},"project": {},"extensions": {},"versions": {"1.0.0": {"majorversion": "1.0","latest": true,"ref": "","base": "gearboxworks/gearbox-base:alpine-3.10"},"": {}}}'
+LABEL gearbox.json='{"schema": "gear-1","meta": {"state": "production","organization": "gearboxworks","name": "mailhog","label": "Mailhog","maintainer": "Gearbox Team <team@gearbox.works>","class": "system","refurl": "https://github.com/mailhog/MailHog"},"build": {"ports": {"http": "80","smtp": "25"},"run": "/usr/local/bin/MailHog","args": "","env": {"MH_API_BIND_ADDR": "0.0.0.0:80","MH_HOSTNAME": "mailhog.gearboxworks.io","MH_SMTP_BIND_ADDR": "0.0.0.0:25","MH_UI_BIND_ADDR": "0.0.0.0:80"},"network": "--network gearboxnet","volumes": "","restart": "--restart always"},"run": {"commands": {"default": ""}},"project": {},"extensions": {},"versions": {"1.0.0": {"majorversion": "1.0","latest": true,"ref": "","base": "gearboxworks/gearbox-base:alpine-3.10"}}}'
 LABEL gearbox.version='1.0.0'
 ENV GEARBOX_VERSION "1.0.0"
 LABEL container.class="system"

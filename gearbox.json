@@ -29,6 +29,10 @@
 		"restart": "--restart always"
 	},
 	"run": {
+		"commands": {
+			"default": "/usr/local/bin/mhsendmail",
+			"mhsendmail": "/usr/local/bin/mhsendmail"
+		}
 	},
 	"project": {
 	},
@@ -40,7 +44,6 @@
 			"latest": true,
 			"ref": "",
 			"base": "gearboxworks/gearbox-base:alpine-3.10"
-		},
-		"": {}
+		}
 	}
 }
