@@ -90,7 +90,8 @@ Running mailhog Gearbox container default command. If a container has a default 
 `./launch mailhog:1.0.0 -flag1 -flag2 variable`
 
 Gearbox containers may have multiple executables that can be run. The mailhog Gearbox container has the following available commands:
-- The default command will execute `` within the container.
+- The default command will execute `/usr/local/bin/mhsendmail` within the container.
+- `mhsendmail` - will execute `/usr/local/bin/mhsendmail` within the container.
 
 
 ### Remote connection
